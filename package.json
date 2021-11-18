@@ -1,0 +1,66 @@
+{
+  "name": "ubox-auto-sdk-web",
+  "version": "0.0.1",
+  "description": "Web sdk for ubox auto",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucloud/ubox-auto-sdk-web.git"
+  },
+  "keywords": [
+    "ucloud",
+    "ubox",
+    "webrtc"
+  ],
+  "author": "ZxBing0066",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ucloud/ubox-auto-sdk-web/issues"
+  },
+  "homepage": "https://github.com/ucloud/ubox-auto-sdk-web#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.10.2",
+    "@babel/generator": "^7.10.2",
+    "@babel/parser": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.1",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-typescript": "^7.10.1",
+    "@babel/traverse": "^7.10.1",
+    "babel-loader": "^8.1.0",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "typescript": "^3.9.5",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.43.0",
+    "webpack-bundle-analyzer": "^4.4.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.10.2",
+    "axios": "^0.24.0",
+    "core-js": "^3.6.5",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "object-hash": "^2.2.0"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode=development",
+    "start:docs": "npx docsify-cli serve docs",
+    "build": "webpack",
+    "build:analyzer": "ANALYZER=true webpack",
+    "build:lib": "babel src/ -d lib/ -x \".js\",\".ts\" --config-file \"./babel.config.js\" --source-maps",
+    "build:types": "tsc && tsc --outDir ./lib-polyfill",
+    "before-publish": "rm -rf dist && npm run build && rm -rf lib && npm run build:lib && npm run build:types",
+    "ci": "npm run before-publish",
+    "publish:patch": "npm version patch && git push --follow-tags",
+    "publish:minor": "npm version minor && git push --follow-tags",
+    "publish:major": "npm version major && git push --follow-tags",
+    "test": "npm run build && rm -rf ./tests/temp && cp -R dist ./tests/temp/ && npx serve ./tests",
+    "test:ci": "npm run build && npm run build:lib"
+  }
+}
