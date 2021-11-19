@@ -40,18 +40,22 @@ const init = ({ publicKey, privateKey, projectId }: { publicKey: string; private
         );
     };
 
-    const play = (videoElement, { sdnboxId, cameraId }, options) => {
+    const play = (videoElement, { sdnboxId, cameraId, url }, options) => {
         const { autoplay } = options || {};
         if (!videoElement) {
             throw new Error('Missing video element');
         }
-        if (!sdnboxId || !cameraId) {
-            throw new Error('Check your sdnboxId and cameraId');
+        if (!url) {
+            if (!sdnboxId || !cameraId) {
+                throw new Error('Check your sdnboxId and cameraId');
+            }
+            const sdnbox = cachedList.find(box => box.ID === sdnboxId);
+            const camera = sdnbox.Camera.find(camera => camera.ID === cameraId);
+            url = camera.PullRTMPAddress.webrtc;
         }
-        const sdnbox = cachedList.find(box => box.ID === sdnboxId);
-        const camera = sdnbox.Camera.find(camera => camera.ID === cameraId);
-        // const url = camera.PullRTMPAddress.webrtc;
-        const url = 'webrtc://106.75.32.7/live/yushi_dev_video2';
+        if (!url) {
+            throw new Error("Can't find valid url");
+        }
         let player;
         let running = false;
         let timer;

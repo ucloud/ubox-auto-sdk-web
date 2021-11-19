@@ -35,7 +35,8 @@ const Player = ({ camera, sdnboxId }) => {
     const videoRef = useRef(null);
     useEffect(() => {
         if (!videoRef.current) return;
-        const player = client.play(videoRef.current, { cameraId: camera.ID, sdnboxId });
+        // const player = client.play(videoRef.current, { cameraId: camera.ID, sdnboxId });
+        const player = client.play(videoRef.current, { url: 'webrtc://106.75.32.7/live/yushi_dev_video2' });
         console.log(player);
         player.start();
         player.stats().then(console.log);

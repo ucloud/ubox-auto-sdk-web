@@ -1,6 +1,6 @@
 # ubox-auto-sdk-web
 
-Web sdk for ubox auto
+UCloud 智能盒子 web 端 SDK
 
 ## How ot use
 
@@ -12,10 +12,12 @@ npm install ubox-auto-sdk-web
 
 ### 使用
 
-第一步，初始化实例
+#### 初始化实例
 
 ```js
+// 引用包
 const UBoxAuto = require('ubox-auto-sdk-web');
+// 实例化调用端
 const client = new UBoxAuto({
     publicKey: 'xxx', // 在 API 密钥中查看管理自己的密钥： https://console.ucloud.cn/uaccount/api_manage
     privateKey: 'xxx',
@@ -23,20 +25,25 @@ const client = new UBoxAuto({
 });
 ```
 
-第二步，调用 client 获取数据
+#### 调用 client 获取数据
 
 错误请统一通过 try/catch 获取
 
 ```js
 try {
-    client.getSdnboxCameraList().then(list => {})
-    client.startSdnboxCameraPushing().then(() => {console.log('start success');});
+    client.getSdnboxCameraList().then(list => {});
+    client.startSdnboxCameraPushing().then(() => {
+        console.log('start success');
+    });
+} catch (e) {
+    console.error(e);
 }
 ```
 
 1. 获取盒子和摄像头列表
 
 ```js
+// 获取盒子，摄像头的列表数据
 client.getSdnboxCameraList().then(list => {
     console.log(list);
 });
@@ -86,22 +93,30 @@ client.getSdnboxCameraList().then(list => {
 2. 开启/关闭摄像头推流
 
 ```js
-client.startSdnboxCameraPushing().then(() => {
+// 开启对应摄像头的推流
+client.startSdnboxCameraPushing({ cameraId, sdnboxId }).then(() => {
     console.log('start success');
 });
 ```
 
 ```js
-client.stopSdnboxCameraPushing().then(() => {
+// 关闭对应摄像头的推流
+client.stopSdnboxCameraPushing({ cameraId, sdnboxId }).then(() => {
     console.log('stop success');
 });
 ```
 
-3. 播放对应摄像头 webrtc 流
+#### 播放对应摄像头 webrtc 流
 
 ```js
-const player = client.play(document.querySelector('#video'), { cameraId: cameraId, sdnboxId });
+// 播放对应盒子对应摄像头的流
+const player = client.play(document.querySelector('#video'), { cameraId, sdnboxId });
+// 播放对应地址的流
+// const player = client.play(document.querySelector('#video'), { url: 'webrct://xxxxxx' });
+// 开始播放
 player.start();
+// 终止播放
 player.stop();
+// 获取播放信息
 player.stats().then(console.log);
 ```
