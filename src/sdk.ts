@@ -8,36 +8,43 @@ const init = ({ publicKey, privateKey, projectId }: { publicKey: string; private
         privateKey
     });
     let cachedList = [];
+    const checkData = data => {
+        if (data.RetCode !== 0) {
+            throw new Error(`RetCode - ${data.RetCode}, Message - ${data.Message}`);
+        }
+    };
 
     const getSdnboxCameraList = async () => {
-        const list = (await client.request({ ProjectId: projectId, Action: 'GetSdnboxCameraList' })).data.SdnboxCamera;
+        const data = (await client.request({ ProjectId: projectId, Action: 'GetSdnboxCameraList' })).data;
+        checkData(data);
+        const list = data.SdnboxCamera;
         return (cachedList = list);
     };
 
     const startSdnboxCameraPushing = async ({ sdnboxId, cameraId }: { sdnboxId: string; cameraId: string }) => {
-        return (
-            (
-                await client.request({
-                    ProjectId: projectId,
-                    Action: 'StartSdnboxCameraPushing',
-                    SdnboxId: sdnboxId,
-                    CameraId: cameraId
-                })
-            ).data.RetCode === 0
-        );
+        const data = (
+            await client.request({
+                ProjectId: projectId,
+                Action: 'StartSdnboxCameraPushing',
+                SdnboxId: sdnboxId,
+                CameraId: cameraId
+            })
+        ).data;
+        checkData(data);
+        return;
     };
 
     const stopSdnboxCameraPushing = async ({ sdnboxId, cameraId }: { sdnboxId: string; cameraId: string }) => {
-        return (
-            (
-                await client.request({
-                    ProjectId: projectId,
-                    Action: 'StopSdnboxCameraPushing',
-                    SdnboxId: sdnboxId,
-                    CameraId: cameraId
-                })
-            ).data.RetCode === 0
-        );
+        const data = (
+            await client.request({
+                ProjectId: projectId,
+                Action: 'StopSdnboxCameraPushing',
+                SdnboxId: sdnboxId,
+                CameraId: cameraId
+            })
+        ).data;
+        checkData(data);
+        return;
     };
 
     const play = (videoElement, { sdnboxId, cameraId, url }, options) => {
