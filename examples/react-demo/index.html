@@ -6,7 +6,11 @@
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <script src="http://localhost:8080/UBoxAuto.min.js"></script>
+    <% if(isDev){ %>
+        <script src="http://localhost:8080/UBoxAuto.min.js"></script>
+    <% } else { %>
+        <script src="https://cdn.jsdelivr.net/npm/ubox-auto-sdk-web/dist/UBoxAuto.min.js"></script>
+    <% } %>
 </head>
 
 <body>

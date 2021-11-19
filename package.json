@@ -2,7 +2,7 @@
   "name": "ubox-auto-sdk-web",
   "version": "0.0.1",
   "description": "Web sdk for ubox auto",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ucloud/ubox-auto-sdk-web.git"
@@ -11,6 +11,10 @@
     "ucloud",
     "ubox",
     "webrtc"
+  ],
+  "files": [
+    "lib",
+    "dist"
   ],
   "author": "ZxBing0066",
   "license": "MIT",
@@ -54,13 +58,13 @@
     "build": "webpack",
     "build:analyzer": "ANALYZER=true webpack",
     "build:lib": "babel src/ -d lib/ -x \".js\",\".ts\" --config-file \"./babel.config.js\" --source-maps",
-    "build:types": "tsc && tsc --outDir ./lib-polyfill",
+    "build:types": "tsc && tsc --outDir ./lib",
+    "build:demos": "cd examples/react-demo/ && npm run build && cd ../../",
     "before-publish": "rm -rf dist && npm run build && rm -rf lib && npm run build:lib && npm run build:types",
     "ci": "npm run before-publish",
     "publish:patch": "npm version patch && git push --follow-tags",
     "publish:minor": "npm version minor && git push --follow-tags",
     "publish:major": "npm version major && git push --follow-tags",
-    "test": "npm run build && rm -rf ./tests/temp && cp -R dist ./tests/temp/ && npx serve ./tests",
-    "test:ci": "npm run build && npm run build:lib"
+    "test:ci": "npm run build && npm run build:lib && npm run build:types"
   }
 }
