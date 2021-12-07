@@ -109,10 +109,10 @@ client.stopSdnboxCameraPushing({ cameraId, sdnboxId }).then(() => {
 #### 播放对应摄像头 webrtc 流
 
 ```js
-// 播放对应盒子对应摄像头的流
+// 播放对应盒子对应摄像头的流，需要调用 getSdnboxCameraList 才可采用这种方式，会从返回结果中获取对应的流地址
 const player = client.play(document.querySelector('#video'), { cameraId, sdnboxId });
-// 播放对应地址的流
-// const player = client.play(document.querySelector('#video'), { url: 'webrct://xxxxxx' });
+// 或播放对应地址的流，url 为 webrtc 地址
+// const player = client.play(document.querySelector('#video'), { url: 'webrtc://xxxxxx' });
 // 开始播放
 player.start();
 // 终止播放

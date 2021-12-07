@@ -35,7 +35,7 @@ const encode = (args: argsT) => {
     return result;
 };
 
-class Request {
+export default class Request {
     credential: Credential;
     constructor(credential) {
         this.credential = credential;
@@ -43,12 +43,12 @@ class Request {
     request = async data =>
         await axios({
             method: 'post',
-            baseURL: 'https://api.ucloud.cn',
+            baseURL: 'https://ubox-api.ucloud.cn',
+            // baseURL: 'http://ubox-api.ucloud.cn',
+            // baseURL: 'http://117.50.0.138',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: this.credential.sign(encode(data))
         });
 }
-
-export default Request;
