@@ -32,21 +32,73 @@ const BoxTitle = ({ open, box }) => {
 
 const Player = ({ camera, sdnboxId }) => {
     const client = useContext(ClientContext);
-    const videoRef = useRef(null);
+    const videoContainerRef = useRef(null);
+    const [error, setError] = useState(null);
+    const [errorCount, setErrorCount] = useState(0);
+    const playerRef = useRef(null);
+    const [playInfo, setPlayInfo] = useState(() => ({ cameraId: camera.ID, sdnboxId }));
     useEffect(() => {
-        if (!videoRef.current) return;
-        // const player = client.play(videoRef.current, { cameraId: camera.ID, sdnboxId });
-        const player = client.play(videoRef.current, { url: 'webrtc://106.75.32.7/live/yushi_dev_video2' });
-        console.log(player);
-        player.start();
-        player.stats().then(console.log);
+        if (!videoContainerRef.current) return;
+        try {
+            playerRef.current = client.play(
+                videoContainerRef.current,
+                // 目前摄像头流无法正常播放，播放测试地址
+                playInfo,
+                {
+                    onError: e => {
+                        setError(e);
+                        setErrorCount(count => count + 1);
+                    },
+                    onRestore: () => {
+                        setError(null);
+                        setErrorCount(0);
+                    }
+                }
+            );
+            playerRef.current.start();
+        } catch (e) {
+            Message.error(e + '');
+            console.error(e);
+        }
         return () => {
-            player.stop();
+            playerRef.current?.stop();
+            playerRef.current?.destroy();
+            playerRef.current = null;
         };
+    }, [playInfo]);
+    const getStats = useCallback(() => {
+        playerRef.current?.stats().then(stats => {
+            console.log(stats);
+            stats.forEach(console.log);
+        });
     }, []);
+    const playUrl = () => {
+        const url = document.getElementById('urlInput').value;
+        setPlayInfo({ url });
+        // setPlayInfo({ url: 'webrtc://106.75.8.231/50913519/uaccessbox-0kmdj1yl__dev_video0_stream' });
+    };
     return (
-        <Box container alignItems="center" justifyContent="center" padding="lg">
-            <video ref={videoRef} width="480" height="320" />
+        <Box container direction="column" alignItems="center" justifyContent="center" spacing="lg">
+            <div
+                ref={videoContainerRef}
+                style={{
+                    width: '600px',
+                    height: '400px',
+                    boxShadow: error ? 'red 0px 0px 5px 1px' : 'green 0px 0px 5px 1px'
+                }}
+            />
+            <Combine>
+                <Button onClick={getStats}>Stats</Button>
+                <Input id="urlInput" style={{ width: '200px' }} />
+                <Button onClick={playUrl} styleType="primary">
+                    Play URL
+                </Button>
+            </Combine>
+            {error && (
+                <p>
+                    {error + ''}, 重试第 {errorCount} 次
+                </p>
+            )}
         </Box>
     );
 };
@@ -54,7 +106,9 @@ const Player = ({ camera, sdnboxId }) => {
 const PlayModal = ({ camera, sdnboxId, onClose }) => {
     return (
         <Modal visible={true} onClose={onClose}>
-            <Player camera={camera} sdnboxId={sdnboxId} />
+            <Modal.Content>
+                <Player camera={camera} sdnboxId={sdnboxId} />
+            </Modal.Content>
         </Modal>
     );
 };
@@ -229,7 +283,7 @@ function App() {
     const [start, setStart] = useState(true);
     const [client, setClient] = useState(null);
     const handleSubmit = useCallback(data => {
-        setClient(UBoxAuto(data));
+        setClient(UBoxAuto(data, { debug: true }));
         setStart(false);
     }, []);
     return start ? (
