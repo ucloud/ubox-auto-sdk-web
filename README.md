@@ -151,6 +151,19 @@ const player = client.play(
 );
 ```
 
+播放器大小
+
+播放器默认大小为容器的大小，可通过传入 width、height 来自定义，如果容器宽高和参数都没有则默认使用 `640*480`
+
+```js
+const player = client.play(
+    // 播放器实例化应用的容器标签元素 <div id="videoContainer"></div>
+    document.querySelector('#videoContainer'),
+    // 通过传入 sdnboxId 和 cameraId 可快速从之前调用过的 getSdnboxCameraList 缓存数据中获取到对应的流地址
+    { cameraId, sdnboxId, width: 800, height: 600 }
+);
+```
+
 options
 
 播放时可传入 options 参数
