@@ -44,7 +44,7 @@ const client = new UBoxAuto(
 
 #### 调用 client 获取数据
 
-错误请统一通过 catch 获取，或使用 await 通过 try/catch 获取
+Promise 类错误请统一通过 catch 获取，或使用 await 通过 try/catch 获取
 
 ```js
 client
@@ -57,6 +57,16 @@ client
         console.log('start success');
     })
     .catch(console.error);
+
+try {
+    const player = client.play(
+        document.querySelector('#videoContainer'),
+        // 也可自行提供对应地址的流进行播放，url 为 webrtc 地址
+        { url: 'webrtc://xxxxxx' }
+    );
+} catch (e) {
+    console.error('play fail', e);
+}
 ```
 
 1. 获取盒子和摄像头列表

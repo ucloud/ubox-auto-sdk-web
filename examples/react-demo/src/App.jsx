@@ -181,24 +181,32 @@ const Main = () => {
         <BoxContext.Provider value={{ onUpdate }}>
             <Loading loading={loading} style={{ minHeight: '300px' }}>
                 <Collapse multiple={false}>
-                    <div className="box-list">
-                        {list.map(box => {
-                            return (
-                                <Collapse.Panel
-                                    key={box.ID}
-                                    panelKey={box.ID}
-                                    className="box-item"
-                                    title={props => <BoxTitle {...props} box={box} />}
-                                >
-                                    <div>
-                                        {box.Camera.map(camera => {
-                                            return <Camera key={camera.ID} sdnboxId={box.ID} camera={camera} />;
-                                        })}
-                                    </div>
-                                </Collapse.Panel>
-                            );
-                        })}
-                    </div>
+                    {list.length ? (
+                        <div className="box-list">
+                            {list.map(box => {
+                                return (
+                                    <Collapse.Panel
+                                        key={box.ID}
+                                        panelKey={box.ID}
+                                        className="box-item"
+                                        title={props => <BoxTitle {...props} box={box} />}
+                                    >
+                                        <div>
+                                            {box.Camera?.length ? (
+                                                box.Camera.map(camera => {
+                                                    return <Camera key={camera.ID} sdnboxId={box.ID} camera={camera} />;
+                                                })
+                                            ) : (
+                                                <div>无摄像头</div>
+                                            )}
+                                        </div>
+                                    </Collapse.Panel>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div>盒子列表为空</div>
+                    )}
                 </Collapse>
             </Loading>
         </BoxContext.Provider>
@@ -283,7 +291,7 @@ function App() {
     const [start, setStart] = useState(true);
     const [client, setClient] = useState(null);
     const handleSubmit = useCallback(data => {
-        setClient(UBoxAuto(data, { debug: true }));
+        setClient(UBoxAuto(data, { debug: false }));
         setStart(false);
     }, []);
     return start ? (

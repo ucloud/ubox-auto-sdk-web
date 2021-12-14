@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import Credential from './credential';
-import debugLog from './debugLog';
+import { createDebugLogger } from './debugLog';
 
 type argsT = { [index: string]: any };
 
@@ -38,13 +38,13 @@ const encode = (args: argsT) => {
 
 export default class Request {
     credential: Credential;
-    debug?: boolean;
+    log: ReturnType<typeof createDebugLogger>;
     constructor(credential: Credential, debug?: boolean) {
         this.credential = credential;
-        this.debug = debug;
+        this.log = createDebugLogger(debug);
     }
     request = async data => {
-        debugLog('request', data);
+        this.log('API request', data);
         const res = await axios({
             method: 'post',
             baseURL: 'https://ubox-api.ucloud.cn',
@@ -56,7 +56,7 @@ export default class Request {
             },
             data: this.credential.sign(encode(data))
         });
-        debugLog('response', res);
+        this.log('API response', res);
         return res;
     };
 }
