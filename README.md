@@ -163,7 +163,10 @@ const player = client.play(
 
 播放器大小
 
-播放器默认大小为容器的大小，可通过传入 width、height 来自定义，如果容器宽高和参数都没有则默认使用 `640*480`
+-   播放器默认大小为容器的大小
+-   可通过传入 width、height 来自定义
+-   如果容器宽高和参数都没有则默认使用 `640*480`
+-   也可直接使用 fill 参数来让播放器充满容器（自适应，需要注意容器设置宽高，不然视频自适应可能会导致容器抖动）
 
 ```js
 const player = client.play(
@@ -171,6 +174,17 @@ const player = client.play(
     document.querySelector('#videoContainer'),
     // 通过传入 sdnboxId 和 cameraId 可快速从之前调用过的 getSdnboxCameraList 缓存数据中获取到对应的流地址
     { cameraId, sdnboxId, width: 800, height: 600 }
+);
+```
+
+fill demo
+
+```js
+const player = client.play(
+    // 播放器实例化应用的容器标签元素 <div id="videoContainer" style="width: 100%;height: 400px;"></div>
+    document.querySelector('#videoContainer'),
+    // 通过传入 sdnboxId 和 cameraId 可快速从之前调用过的 getSdnboxCameraList 缓存数据中获取到对应的流地址
+    { cameraId, sdnboxId, fill: true }
 );
 ```
 

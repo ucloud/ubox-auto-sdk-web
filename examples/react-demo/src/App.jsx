@@ -43,7 +43,7 @@ const Player = ({ camera, sdnboxId }) => {
             playerRef.current = client.play(
                 videoContainerRef.current,
                 // 目前摄像头流无法正常播放，播放测试地址
-                playInfo,
+                { ...playInfo, fill: true },
                 {
                     onError: e => {
                         setError(e);
@@ -82,7 +82,7 @@ const Player = ({ camera, sdnboxId }) => {
             <div
                 ref={videoContainerRef}
                 style={{
-                    width: '600px',
+                    width: '100%',
                     height: '400px',
                     boxShadow: error ? 'red 0px 0px 5px 1px' : 'green 0px 0px 5px 1px'
                 }}
@@ -291,7 +291,7 @@ function App() {
     const [start, setStart] = useState(true);
     const [client, setClient] = useState(null);
     const handleSubmit = useCallback(data => {
-        setClient(UBoxAuto(data, { debug: false }));
+        setClient(UBoxAuto(data, { debug: true }));
         setStart(false);
     }, []);
     return start ? (

@@ -60,10 +60,17 @@ const init = (
 
     const play = (
         containerElement: HTMLDivElement,
-        playInfo: { url: string; width?: number; height?: number; sdnboxId?: string; cameraId?: string },
+        playInfo: {
+            sdnboxId?: string;
+            cameraId?: string;
+            url: string;
+            width?: number;
+            height?: number;
+            fill?: boolean;
+        },
         options: Options
     ) => {
-        let { sdnboxId, cameraId, url, width, height } = playInfo || {};
+        let { sdnboxId, cameraId, url, ...rest } = playInfo || {};
         if (!containerElement) {
             throw new Error('Missing container element');
         }
@@ -75,7 +82,7 @@ const init = (
             const camera = sdnbox.Camera.find(camera => camera.ID === cameraId);
             url = camera.PullRTMPAddress.webrtc;
         }
-        const player = Player(containerElement, { url, width, height }, { ...options, debug });
+        const player = Player(containerElement, { url, ...rest }, { ...options, debug });
         debugLog('Create player of', url);
         return player;
     };
