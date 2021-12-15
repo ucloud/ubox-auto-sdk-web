@@ -237,3 +237,25 @@ player.destroy();
 // 获取播放信息，stats 内容参考 https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/getStats#example
 player.stats().then(stats => stats.forEach(console.log));
 ```
+
+#### 错误类型列表
+
+-   ENDED_ERROR
+
+播放器终止了（播放结束，理论不会出现）
+
+-   SEEKING_ERROR
+
+播放器一直在寻找资源而没播放
+
+-   NO_FUTURE_DATA_ERROR
+
+播放器接受不到更多数据，无法继续播放
+
+-   NO_MORE_RECEIVED_DATA
+
+拉流未拉到数据（一般是推流端中断推流，或网络断开）
+
+-   GET_BYTES_RECEIVED_FAIL
+
+无法获取到拉流的信息（一般是连接建立失败触发）
