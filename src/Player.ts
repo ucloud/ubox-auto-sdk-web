@@ -161,11 +161,11 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
             // 定时检测播放状态，如果状态异常则重试播放
             if (videoElement.ended || videoElement.seeking || videoElement.readyState < videoElement.HAVE_FUTURE_DATA) {
                 errorType = videoElement.ended
-                    ? 'ENDED_ERROR'
+                    ? 'VIDEO_ENDED'
                     : videoElement.seeking
-                    ? 'SEEKING_ERROR'
+                    ? 'VIDEO_SEEKING'
                     : videoElement.readyState < videoElement.HAVE_FUTURE_DATA
-                    ? 'NO_FUTURE_DATA_ERROR'
+                    ? 'VIDEO_NO_FUTURE_DATA'
                     : 'UNKNOWN_ERROR';
             } else {
                 // 检测流状态，流数据不变则认定为拉取不到数据进行重新播放

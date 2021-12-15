@@ -240,22 +240,17 @@ player.stats().then(stats => stats.forEach(console.log));
 
 #### 错误类型列表
 
--   ENDED_ERROR
+-   VIDEO_ENDED
+    播放器播放结束（理论不会出现）
 
-播放器终止了（播放结束，理论不会出现）
+-   VIDEO_SEEKING
+    播放器一直在寻找资源而没播放
 
--   SEEKING_ERROR
-
-播放器一直在寻找资源而没播放
-
--   NO_FUTURE_DATA_ERROR
-
-播放器接受不到更多数据，无法继续播放
+-   VIDEO_NO_FUTURE_DATA
+    播放器接受不到更多数据，无法继续播放
 
 -   NO_MORE_RECEIVED_DATA
-
-拉流未拉到数据（一般是推流端中断推流，或网络断开）
+    拉流未拉到数据（一般是推流端中断推流，或网络断开）
 
 -   GET_BYTES_RECEIVED_FAIL
-
-无法获取到拉流的信息（一般是连接建立失败触发）
+    无法获取到拉流的信息（一般是连接建立失败触发）
