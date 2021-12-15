@@ -202,7 +202,7 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
                 }
                 latestErrorState = false;
             }
-        }, 3000);
+        }, 10000);
     };
     const stop = () => {
         if (!running) return console.error('Player is not running');
