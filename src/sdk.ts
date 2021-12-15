@@ -80,7 +80,7 @@ const init = (
             }
             const sdnbox = cachedList.find(box => box.ID === sdnboxId);
             const camera = sdnbox.Camera.find(camera => camera.ID === cameraId);
-            url = camera.PullRTMPAddress.webrtc;
+            url = camera.PullRTMPAddress.Webrtc || camera.PullRTMPAddress.webrtc;
         }
         const player = Player(containerElement, { url, ...rest }, { ...options, debug });
         debugLog('Create player of', url);
