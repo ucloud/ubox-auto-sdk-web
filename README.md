@@ -78,46 +78,7 @@ client.getSdnboxCameraList().then(list => {
 });
 ```
 
-返回数据格式参考
-
-```json
-[
-    {
-        "ID": "uaccessbox-jtjy2rx2",
-        "Name": "middle-1",
-        "Camera": [
-            {
-                "ID": "01",
-                "Name": "01",
-                "Status": 1,
-                "VideoParams": "{\"pixel_format\":\"YUYV\",\"resolution\":\"1080*720;640*480\"}",
-                "PushRTMPAddress": "rtmp://113.31.163.86:1935/50913519/uaccessbox-jtjy2rx2_01_stream",
-                "SmallPullRTMPAddress": null,
-                "PullRTMPAddress": {
-                    "dash": "http://113.31.163.86:8080/dash/uaccessbox-jtjy2rx2_01_stream/index.mpd",
-                    "flv": "http://113.31.163.86:8080/live?app=50913519&stream=uaccessbox-jtjy2rx2_01_stream",
-                    "hls": "http://113.31.163.86:8080/hls/uaccessbox-jtjy2rx2_01_stream/index.m3u8",
-                    "rtmp": "rtmp://113.31.163.86:1935/50913519/uaccessbox-jtjy2rx2_01_stream"
-                }
-            },
-            {
-                "ID": "02",
-                "Name": "02",
-                "Status": 1,
-                "VideoParams": "{\"pixel_format\":\"YUYV\",\"resolution\":\"640*480\"}",
-                "PushRTMPAddress": "rtmp://113.31.163.86:1935/50913519/uaccessbox-jtjy2rx2_02_stream",
-                "SmallPullRTMPAddress": null,
-                "PullRTMPAddress": {
-                    "dash": "http://113.31.163.86:8080/dash/uaccessbox-jtjy2rx2_02_stream/index.mpd",
-                    "flv": "http://113.31.163.86:8080/live?app=50913519&stream=uaccessbox-jtjy2rx2_02_stream",
-                    "hls": "http://113.31.163.86:8080/hls/uaccessbox-jtjy2rx2_02_stream/index.m3u8",
-                    "rtmp": "rtmp://113.31.163.86:1935/50913519/uaccessbox-jtjy2rx2_02_stream"
-                }
-            }
-        ]
-    }
-]
-```
+返回数据格式参考[`文档页`](https://docs.ucloud.cn/api/ubox-api/get_sdnbox_camera_list?id=%e5%93%8d%e5%ba%94%e7%a4%ba%e4%be%8b)
 
 2. 开启/关闭摄像头推流
 
@@ -241,16 +202,21 @@ player.stats().then(stats => stats.forEach(console.log));
 #### 错误类型列表
 
 -   VIDEO_ENDED
+    
     播放器播放结束（理论不会出现）
 
 -   VIDEO_SEEKING
+    
     播放器一直在寻找资源而没播放
 
 -   VIDEO_NO_FUTURE_DATA
+    
     播放器接受不到更多数据，无法继续播放
 
 -   NO_MORE_RECEIVED_DATA
+    
     拉流未拉到数据（一般是推流端中断推流，或网络断开）
 
 -   GET_BYTES_RECEIVED_FAIL
+    
     无法获取到拉流的信息（一般是连接建立失败触发）
