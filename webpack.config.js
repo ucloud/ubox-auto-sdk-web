@@ -16,6 +16,7 @@ module.exports = {
     devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'source-map',
     devServer: {
         contentBase: './dist',
+        port: '8090',
         headers: {
             'Access-Control-Allow-Origin': '*'
         }

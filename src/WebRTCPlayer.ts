@@ -149,7 +149,13 @@ const WebRTCPlayer = (url: string, video: HTMLVideoElement, options?: Options) =
                     let api = urlParams.user_query.play || '/rtc/v1/play/';
                     if (api.lastIndexOf('/') != api.length - 1) api += '/';
 
-                    let url = 'http://' + urlParams.server + ':' + port + api;
+                    let url =
+                        (location.protocol === 'https:' ? 'https' : 'http') +
+                        '://' +
+                        urlParams.server +
+                        ':' +
+                        port +
+                        api;
                     for (const key in urlParams.user_query) {
                         if (key != 'api' && key != 'play') {
                             url += '&' + key + '=' + urlParams.user_query[key];
