@@ -23,7 +23,7 @@ const fillQuery = (query_string: string, obj) => {
 const parseUrl = function (rtmp_url: string) {
     // @see: http://stackoverflow.com/questions/10469575/how-to-use-location-object-to-parse-url-without-redirecting-the-page-in-javascri
     const a = document.createElement('a');
-    a.href = rtmp_url.replace('rtmp://', 'http://').replace('webrtc://', 'http://').replace('rtc://', 'http://');
+    a.href = rtmp_url.replace('webrtc://', 'http://');
 
     let vhost = a.hostname;
     let app = a.pathname.substring(1, a.pathname.lastIndexOf('/') - 1);
@@ -51,21 +51,9 @@ const parseUrl = function (rtmp_url: string) {
     }
 
     // parse the schema
-    let schema = 'rtmp';
-    if (rtmp_url.indexOf('://') > 0) schema = rtmp_url.substring(0, rtmp_url.indexOf('://'));
+    let schema = 'webrtc';
 
-    let port: number | string = a.port;
-    if (!port) {
-        if (schema === 'http') {
-            port = 80;
-        } else if (schema === 'https') {
-            port = 443;
-        } else if (schema === 'rtmp') {
-            port = 1935;
-        } else if (schema === 'webrtc' || schema === 'rtc') {
-            port = 1985;
-        }
-    }
+    let port: number | string = a.port || 1985;
 
     const ret = {
         url: rtmp_url,
@@ -148,14 +136,9 @@ const WebRTCPlayer = (url: string, video: HTMLVideoElement, options?: Options) =
                     // @see https://github.com/rtcdn/rtcdn-draft
                     let api = urlParams.user_query.play || '/rtc/v1/play/';
                     if (api.lastIndexOf('/') != api.length - 1) api += '/';
-
+                    const useHttps = location.protocol === 'https:';
                     let url =
-                        (location.protocol === 'https:' ? 'https' : 'http') +
-                        '://' +
-                        urlParams.server +
-                        ':' +
-                        port +
-                        api;
+                        (useHttps ? 'https' : 'http') + '://' + urlParams.server + (useHttps ? '' : ':' + port) + api;
                     for (const key in urlParams.user_query) {
                         if (key != 'api' && key != 'play') {
                             url += '&' + key + '=' + urlParams.user_query[key];
