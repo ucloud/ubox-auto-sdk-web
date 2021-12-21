@@ -61,7 +61,6 @@ const Player = ({ camera, sdnboxId }) => {
             console.error(e);
         }
         return () => {
-            playerRef.current?.stop();
             playerRef.current?.destroy();
             playerRef.current = null;
         };
