@@ -225,6 +225,7 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
         videoElement?.removeEventListener('timeupdate', onTimeUpdate);
         containerElement?.removeChild(videoElement);
         containerElement?.removeChild(maskElement);
+        if (running) stop();
         debugLog('player destroyed');
     };
     autoplay && play();
