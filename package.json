@@ -1,6 +1,6 @@
 {
   "name": "ubox-auto-sdk-web",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Web sdk for ubox auto",
   "main": "lib/index.js",
   "repository": {
