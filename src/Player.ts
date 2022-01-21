@@ -14,10 +14,13 @@ export interface Options {
 }
 
 export interface PlayInfo {
+    /** url address for the webrtc */
     url: string;
+    /** set the width */
     width?: number;
+    /** set the height */
     height?: number;
-    objectFit?: CSSStyleDeclaration['objectFit'];
+    /** just fill the container without specific width/height */
     fill?: boolean;
 }
 const PlayerError = (message: string | Error, type = 'PLAYER_ERROR') => {
@@ -69,9 +72,11 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
     }
     let player: ReturnType<typeof WebRTCPlayer>;
     let running = false;
+    let paused = false;
     let timer;
     let latestErrorState = false;
     let latestPoster = null;
+    let latestBytesReceived = 0;
 
     // video 标签
     const videoElement = document.createElement('video');
@@ -119,8 +124,10 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
         maskHidden = maskElement.hidden = true;
         debugLog('Hide the video mask');
     };
-    // 重新播放时会触发此事件，由于此时有播放时间，而导致隐藏 mask 被隐藏，延迟检测
+    // 重新播放时会触发此事件，由于此时有播放时间，而导致 mask 被隐藏，延迟检测
     const onTimeUpdate = () => {
+        // stop 时也会触发，只有在 running 处理
+        if (!running) return;
         if (!maskHidden) {
             setTimeout(() => {
                 if (videoElement.currentTime > 0) {
@@ -128,6 +135,8 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
                 }
             }, 100);
         }
+        // 存在播放数据，清理 poster 缓存
+        if (latestPoster && videoElement.currentTime > 0) latestPoster = null;
     };
 
     containerElement.appendChild(videoElement);
@@ -136,19 +145,8 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
     // 开始播放移除遮挡
     videoElement.addEventListener('timeupdate', onTimeUpdate);
 
-    const play = () => {
-        if (running) return console.error('Is playing');
-        running = true;
-        let latestBytesReceived = 0;
-        player = WebRTCPlayer(url, videoElement, {
-            autoplay: true,
-            onError: (e: Error) => {
-                console.error(PlayerError(e, 'WEBRTC_PLAYER_ERROR'));
-            },
-            debug
-        });
-        debugLog('Create the webRTC player');
-
+    const startPatrol = () => {
+        stopPatrol();
         timer = setInterval(async () => {
             if (!running) return;
             let errorType: string = null;
@@ -186,8 +184,8 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
                 if (!latestPoster) {
                     const dataUrl = captureScreen(videoElement);
                     latestPoster = videoElement.poster = dataUrl;
-                    showMaskImage(latestPoster);
                 }
+                showMaskImage(latestPoster);
                 onError(error);
                 latestErrorState = true;
                 stop();
@@ -196,7 +194,6 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
             } else {
                 // 变为无异常 调用
                 if (latestErrorState) {
-                    latestPoster = null;
                     onRestore();
                     debugLog('onRestore triggered');
                 }
@@ -204,9 +201,59 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
             }
         }, 10000);
     };
-    const stop = () => {
+    const stopPatrol = () => {
+        if (timer != null) {
+            clearInterval(timer);
+            timer = null;
+        }
+    };
+
+    const play = () => {
+        if (running) return console.error('Is playing');
+
+        if (!player) {
+            player = WebRTCPlayer(url, videoElement, {
+                autoplay: true,
+                onError: (e: Error) => {
+                    console.error(PlayerError(e, 'WEBRTC_PLAYER_ERROR'));
+                },
+                debug
+            });
+            debugLog('Create the webRTC player');
+        }
+
+        if (paused) player.play();
+
+        running = true;
+        paused = false;
+        latestBytesReceived = 0;
+        startPatrol();
+    };
+    const pause = () => {
         if (!running) return console.error('Player is not running');
+        running = false;
+        paused = true;
+        player.stop();
+        stopPatrol();
+        debugLog('player paused');
+    };
+    const stop = ({
+        withPoster
+    }: {
+        /** will make a poster mask to override the video, so there will no black-screen when call play after */
+        withPoster?: boolean;
+    } = {}) => {
+        if (!running) return console.error('Player is not running');
+        if (withPoster) {
+            if (!latestPoster) {
+                const dataUrl = captureScreen(videoElement);
+                latestPoster = videoElement.poster = dataUrl;
+            }
+            showMaskImage(latestPoster);
+        }
+
         player.destroy();
+        player = null;
         running = false;
         clearInterval(timer);
         debugLog('player stopped');
@@ -230,10 +277,17 @@ const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: O
     };
     autoplay && play();
     return {
+        // play the video
         play,
+        // alias to play
         start: play,
+        // pause the video, then call play/start for resume
+        pause,
+        // stop to play the video, will destroy the webrtc pc
         stop,
+        // destroy the video
         destroy,
+        // get the stats of webrtc
         stats
     };
 };
