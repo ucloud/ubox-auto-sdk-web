@@ -7,7 +7,8 @@ module.exports = {
     output: {
         filename: '[name].min.js',
         library: '[name]',
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        libraryExport: 'default'
     },
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
