@@ -60,7 +60,7 @@ const getVideoInbound = stats => {
  * @param options 自定义选项
  * @returns 播放器实例
  */
-const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options: Options) => {
+const Player = (containerElement: HTMLDivElement, playInfo: PlayInfo, options?: Options) => {
     let { url, width, height, fill } = playInfo || {};
     const { autoplay, onError = noop, onRestore = noop, debug } = options || {};
     const debugLog = createDebugLogger(debug);

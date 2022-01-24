@@ -68,7 +68,7 @@ const init = (
             height?: number;
             fill?: boolean;
         },
-        options: Options
+        options?: Options
     ) => {
         let { sdnboxId, cameraId, url, ...rest } = playInfo || {};
         if (!containerElement) {
