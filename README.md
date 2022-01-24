@@ -18,7 +18,7 @@ npm install ubox-auto-sdk-web
 // 引用包
 const UBoxAuto = require('ubox-auto-sdk-web');
 // 实例化调用端
-const client = new UBoxAuto({
+const client = UBoxAuto({
     publicKey: 'xxx', // 在 API 密钥中查看管理自己的密钥： https://console.ucloud.cn/uaccount/api_manage
     privateKey: 'xxx', // 在 API 密钥中查看管理自己的密钥： https://console.ucloud.cn/uaccount/api_manage
     projectId: 'xxx' // 在项目管理中查看需要管理的项目 id： https://console.ucloud.cn/uaccount/iam/project_manage
@@ -32,7 +32,7 @@ debug
 可通过传入 debug 参数，开始 debug，会在某些环节打印出一些 log 帮助调试
 
 ```js
-const client = new UBoxAuto(
+const client = UBoxAuto(
     {
         publicKey: 'xxx',
         privateKey: 'xxx',
