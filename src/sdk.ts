@@ -63,7 +63,7 @@ const init = (
         playInfo: {
             sdnboxId?: string;
             cameraId?: string;
-            url: string;
+            url?: string;
             width?: number;
             height?: number;
             fill?: boolean;
