@@ -1,0 +1,15 @@
+.box-list {
+    padding: 8px;
+    line-height: 22px;
+}
+.box-title {
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.camera {
+    border-bottom: 1px solid #ccc;
+    padding: 4px;
+    margin-left: 24px;
+}

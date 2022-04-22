@@ -1,0 +1,19 @@
+{
+  "name": "react-demo",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base /ubox-auto-sdk-web/examples/react-demo/ --emptyOutDir",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@ucloud-fe/react-components": "^1.2.20",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.0",
+    "vite": "^2.6.4",
+    "vite-plugin-ejs": "^1.4.3"
+  }
+}
